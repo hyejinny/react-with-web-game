@@ -1,5 +1,7 @@
 <html>
     <head>
+        <meta charset="UTF-8" />
+        <title>구구단</title>
         <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script> 
         <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -8,33 +10,55 @@
     <body>
         <div id="root"></div>   <!--결과: <div id="root"><button>Like</button></div>-->
         <script type="text/babel">
-            const e = React.createElement; //태그 만드는 함수
-
-            class LikeButton extends React.Component { //기본적으로 쓰는거로 생각하기
-                constructor(props){
+            class GuGuDan extends React.Component {
+                constructor(props) {
                     super(props);
                     this.state = {
-                        liked: false, 
+                        first: Math.ceil(Math.random()*9),
+                        second: Math.ceil(Math.random()*9),
+                        value: '',
+                        result: '',
                     };
                 }
-                
+
+                onSubmit = (e) => {
+                    e.preventDefault();
+                    if(parseInt(this.state.value) === this.state.first * this.state.second) {
+                        this.setState({
+                        result: '정답',
+                        first: Math.ceil(Math.random()*9),
+                        second: Math.ceil(Math.random()*9),
+                        value: '',
+                        });
+                    } else {
+                        this.setState({
+                        result: '땡',
+                        value: '',
+                        });
+                    }
+                };
+
+                onChange = (e) => {
+                    this.setState({ value: e.target.value });
+                };
+
                 render(){
-                    return <button type="submit" onClick={ () => { this.setState({liked: true})}}>
-                        {this.state.liked ? '좋아요 누름' : '좋아요'}
-                        </button>; //JSX (JS + XML)
-                    // 이 문법을 지원하지않기때문에 바벨이란걸 사용해야함
-                    
-                    
-                    //e( 'button', 
-                    // { onClick: () => { this.setState({liked: true}) }, type: 'submit' }, 
-                    // this.state.liked === ture ? 'Liked' : 'Like' ); 
-                    // <button onclick="() => { console.log('clicked')}" type="submit">Like</button> 이런 태그를 만들겠다(만든다x)
-                    // $('button').text('Liked');
+                    return (
+                        <div>
+                            <div>{this.state.first} 곱하기 {this.state.second}는?</div>
+                            <form onSubmit={this.onSubmit}>
+                                <input type="number" value={this.state.value} onChange={this.onChange} />   
+                                <button>입력!</button>
+                            </form>
+                            <div>{this.state.result}</div>
+                        </div>
+                    );
                 }
             }
+
         </script>
         <script type="text/babel">
-            ReactDOM.render(<div><LikeButton/><LikeButton/><LikeButton/></div>, document.querySelector('#root'));
+            ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
             // react로 컴포넌트 만드는걸 렌더링해주는거(화면에 반영)
             // <LikeButton/> 컴포넌트여서 원하는맹큼 쉽게 늘리기 가능
         </script>
